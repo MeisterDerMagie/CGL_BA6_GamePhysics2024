@@ -8,7 +8,7 @@
 
 TestScene::TestScene() : circlePosition(0, 2), circleRadius(1), velocity(0, 0), acceleration(0, -9.81f){}
 
-TestScene::~TestScene() {}
+TestScene::~TestScene() = default;
 
 void TestScene::OnEnable() {}
 
@@ -32,12 +32,10 @@ void TestScene::Update(float deltaTime)
     }
 }
 
-void TestScene::Draw() {
+void TestScene::Draw()
+{
     Draw::Circle(circlePosition, circleRadius);
     Draw::Line(glm::vec2(-5, 0), glm::vec2(5, 0));
-
-    if (drawArrow)
-        Draw::Arrow(circlePosition, mousePosition);
 }
 
 void TestScene::DrawGUI() {
