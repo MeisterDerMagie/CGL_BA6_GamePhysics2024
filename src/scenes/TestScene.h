@@ -19,4 +19,8 @@ public:
 private:
     glm::vec2 circlePosition;
     float circleRadius;
+    glm::vec2 velocity;
+    glm::vec2 acceleration;
+    glm::vec2 mousePosition;
+    bool drawArrow;
 };
