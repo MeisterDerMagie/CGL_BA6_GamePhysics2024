@@ -21,20 +21,18 @@ private:
     float circleRadius;
     float circleMass;
     glm::vec2 velocity;
-    glm::vec2 acceleration;
+    glm::vec2 gravity;
     glm::vec2 mousePosition;
     glm::vec2 totalForce;
     bool drawArrow;
+    bool drawAdvancedTrajectory;
 
     bool MouseIsOverCircle(glm::vec2 mousePos,
                            glm::vec2 circlePos,
                            float circleRadius);
-
-    glm::vec2 TrajectoryPoint(float time,
-                              glm::vec2 currentPos,
-                              glm::vec2 currentVelocity,
-                              glm::vec2 currentAcceleration);
-
+    
     void AddForce(glm::vec2 force);
     void AddImpulse(glm::vec2 impulse);
+    //void DrawTrajectoryAdvanced(float previewTime, int steps, glm::vec2 additionalImpulse);
+    void DrawTrajectorySimple(float previewTime, int steps, glm::vec2 additionalImpulse);
 };
