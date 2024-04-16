@@ -1,4 +1,4 @@
-#include "TestScene.h"
+#include "Assignment1.h"
 
 #include "core/Draw.h"
 #include "core/Colors.h"
@@ -6,15 +6,15 @@
 #include <iostream>
 
 
-TestScene::TestScene() : circlePosition(0, 2), circleRadius(1), velocity(0, 0), acceleration(0, -9.81f){}
+Assignment1::Assignment1() : circlePosition(0, 2), circleRadius(1), velocity(0, 0), acceleration(0, -9.81f){}
 
-TestScene::~TestScene() = default;
+Assignment1::~Assignment1() = default;
 
-void TestScene::OnEnable() {}
+void Assignment1::OnEnable() {}
 
-void TestScene::OnDisable() {}
+void Assignment1::OnDisable() {}
 
-void TestScene::Update(float deltaTime)
+void Assignment1::Update(float deltaTime)
 {
     //Semi-implicite Euler integration
     velocity = velocity + acceleration * deltaTime;
@@ -32,13 +32,13 @@ void TestScene::Update(float deltaTime)
     }
 }
 
-void TestScene::Draw()
+void Assignment1::Draw()
 {
     Draw::Circle(circlePosition, circleRadius);
     Draw::Line(glm::vec2(-5, 0), glm::vec2(5, 0));
 }
 
-void TestScene::DrawGUI() {
+void Assignment1::DrawGUI() {
     ImGui::Begin("Inspector");
     ImGui::DragFloat2("Circle Position", &circlePosition[0], 0.1f);
     ImGui::DragFloat("Circle Radius", &circleRadius, 0.1f);

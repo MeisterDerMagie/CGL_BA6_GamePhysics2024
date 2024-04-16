@@ -10,7 +10,7 @@
 Assignment2::Assignment2()
     : circlePosition(0, 2),
       circleRadius(1),
-      circleMass(1),
+      circleMass(1), //instead of the mass, it's common to cache the inverseMass (1 / mass). Zero mass becomes infinite and therefore a static, non-movable object.
       velocity(0, 0),
       gravity(0, -9.81f),
       mousePosition(),
@@ -124,6 +124,8 @@ void Assignment2::DrawTrajectorySimple(float previewTime, int steps, glm::vec2 a
 
         float tPowerTo2 = glm::pow(t, 2);
         trajectoryCirclePosition = trajectoryCirclePosition + (trajectoryVelocity * t) + ((totalForce * tPowerTo2) / 2.0f);
+
+        //here we need to calculate the new velocity (I forgot to do this)
 
         if (trajectoryCirclePosition.y < 0.0f)
         {

@@ -3,10 +3,10 @@
 #include <glm/glm.hpp>
 #include "core/Simple2DScene.h"
 
-class TestScene : public Simple2DScene {
+class Assignment1 : public Simple2DScene {
 public:
-    TestScene();
-    ~TestScene();
+    Assignment1();
+    ~Assignment1();
 
     virtual void OnEnable() override;
     virtual void OnDisable() override;
@@ -14,7 +14,7 @@ public:
     virtual void Draw() override;
     virtual void DrawGUI() override;
 
-    virtual const char* GetName() override { return "Test Scene"; }
+    virtual const char* GetName() override { return "Assignment1"; }
 
 private:
     glm::vec2 circlePosition;
