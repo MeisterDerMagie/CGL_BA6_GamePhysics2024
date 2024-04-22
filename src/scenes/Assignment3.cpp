@@ -52,8 +52,7 @@ void Assignment3::Update(float deltaTime)
         glm::vec2 moveDirectionAndDistance = halfSpaceNormal * collisionDepth;
         circlePosition += moveDirectionAndDistance;
 
-        //then reflect the velocity to create bounce (we could also just use glm::reflect())
-        //glm::vec2 reflectedVelocity = velocity - 2.0f * (velocity * halfSpaceNormal) * halfSpaceNormal;
+        //then reflect the velocity to create bounce        
         glm::vec2 reflectedVelocity = glm::reflect(velocity, halfSpaceNormal);
         velocity = reflectedVelocity;
     }
