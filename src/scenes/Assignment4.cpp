@@ -23,7 +23,7 @@ void Assignment4::OnDisable() {}
 void Assignment4::Update(float deltaTime) {
 
     //simulate physics for all circles
-    for (auto circle : circles) {
+    for (Circle circle : circles) {
         //reset total force
         circle.TotalForce = glm::vec2(0, 0);
 
@@ -35,11 +35,11 @@ void Assignment4::Update(float deltaTime) {
         circle.Position = circle.Position + circle.Velocity * deltaTime;
     }
 
-    for (auto circle : circles) {
+    for (Circle circle : circles) {
         //check collision with other circles
         circle.IsColliding = false;
 
-        for(auto other : circles) {
+        for(Circle other : circles) {
             Circle* circleAddress = &circle;
             Circle* otherAddress = &other;
 

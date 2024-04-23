@@ -1,20 +1,12 @@
 ﻿#pragma once
 #include <glm/vec2.hpp>
+#include "objects/Particle.h"
 
-class Circle {
+class Circle : public Particle {
 public:
     Circle(glm::vec2 position, float radius, float mass);
-    void ResetTotalForce();
 
-    glm::vec2 Position;
     float Radius;
-    float Mass;
-
-    glm::vec2 Velocity;
-    glm::vec2 TotalForce;
 
     bool IsColliding;
-
-    void AddForce(glm::vec2 force);
-    void AddImpulse(glm::vec2 impulse);
 };
