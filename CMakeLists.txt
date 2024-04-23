@@ -5,11 +5,18 @@ project(${NAME})
 
 # Include all files inside the scenes folder in the build.
 file(GLOB_RECURSE SCENE_SOURCES CONFIGURE_DEPENDS "src/scenes/**.cpp" "src/scenes/**.h")
+
+# Include all files inside the objects folder
+file(GLOB_RECURSE OBJECTS_SOURCES CONFIGURE_DEPENDS "src/objects/**.cpp" "src/objects/**.h")
+
 # Create a filter in Visual Studio for all files in the scenes folder.
 source_group("scenes" FILES ${SCENE_SOURCES})
 
+# Create a filter in Visual Studio for all files in the objects folder.
+source_group("objects" FILES ${OBJECTS_SOURCES})
+
 # All files to be build have to be added here.
-add_executable(${NAME} src/main.cpp ${SCENE_SOURCES})
+add_executable(${NAME} src/main.cpp ${SCENE_SOURCES} ${OBJECTS_SOURCES})
 
 
 target_include_directories(${NAME} PRIVATE src)
