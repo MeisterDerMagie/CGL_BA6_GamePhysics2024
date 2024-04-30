@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "objects/Circle.h"
@@ -16,9 +17,9 @@ public:
     virtual void Draw() override;
     virtual void DrawGUI() override;
 
-    virtual const char* GetName() override { return "Assignment4"; };
+    virtual const char* GetName() override { return "Assignment4"; }
 
 private:
-    std::vector<Circle> circles;
     glm::vec2 gravity;
+    std::vector<std::shared_ptr<Particle>> particles;
 };

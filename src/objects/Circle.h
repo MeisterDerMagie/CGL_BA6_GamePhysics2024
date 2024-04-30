@@ -4,9 +4,11 @@
 
 class Circle : public Particle {
 public:
-    Circle(glm::vec2 position, float radius, float mass);
+    Circle::Circle(glm::vec2 position, float radius, float mass, float coefficientOfRestitution);
 
     float Radius;
 
     bool IsColliding;
+
+    void Draw() override;
 };

@@ -6,6 +6,7 @@ class Rectangle : public Particle {
 public:
     Rectangle(glm::vec2 position,
               float mass,
+              float coefficientOfRestitution,
               glm::vec2 bottomLeft,
               glm::vec2 topRight);
     ~Rectangle();
