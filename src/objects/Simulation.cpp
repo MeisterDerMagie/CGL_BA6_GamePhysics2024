@@ -1,6 +1,9 @@
 ﻿#include "Simulation.h"
 
+#include <iostream>
+
 #include "CollisionResolver.h"
+#include "core/Draw.h"
 
 Simulation::Simulation(glm::vec2 gravity)
     : Gravity(gravity) {
@@ -42,6 +45,9 @@ void Simulation::Update(float deltaTime) {
 
 void Simulation::Draw() {
     for (auto particle : Particles) {
+        //std::cout << particle->Tag << " { " << particle->Color.Value.x << ", " << particle->Color.Value.y << ", " << particle->Color.Value.z << " }" << std::endl;
+
+        Draw::SetColor(particle->Color);
         particle->Draw();
     }
 }

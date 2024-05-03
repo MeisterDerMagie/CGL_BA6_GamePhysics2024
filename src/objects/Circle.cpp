@@ -10,13 +10,6 @@ Circle::Circle(glm::vec2 position, float radius, float mass, float coefficientOf
 }
 
 void Circle::Draw() {
-    //Draw circle
-    
-    if(IsColliding) {
-        Draw::SetColor(Colors::red);
-    } else {
-        Draw::SetColor(Colors::white);
-    }
-    
+    //Draw::SetColor(Color);
     Draw::Circle(Position, Radius);
 }

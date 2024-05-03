@@ -161,8 +161,8 @@ void CollisionResolver::Resolve(const std::shared_ptr<HalfSpace>& a, const std::
     //if projected distance is smaller than the radius, we're colliding with the half space
     bool isCollidingWithHalfSpace = projectedDistance < b->Radius;
 
-    //if we're colliding, move the cirlce out of the half space
-    if (isCollidingWithHalfSpace) {
+    //if we're colliding, move the circle out of the half space
+    if (isCollidingWithHalfSpace) {        
         float intersectionDepth = b->Radius - projectedDistance;
         glm::vec2 moveDirectionAndDistance = halfSpaceNormal * intersectionDepth;
         b->Position += moveDirectionAndDistance;
@@ -171,6 +171,10 @@ void CollisionResolver::Resolve(const std::shared_ptr<HalfSpace>& a, const std::
         glm::vec2 reflectedVelocity =
             glm::reflect(b->Velocity, halfSpaceNormal);
         b->Velocity = reflectedVelocity;
+
+        //finally call collision event
+        a->OnCollision(a, b);
+        b->OnCollision(b, a);
     }
 }
 
@@ -207,7 +211,8 @@ void CollisionResolver::Resolve(const std::shared_ptr<Circle>& a, const std::sha
     a->Velocity = glm::reflect(a->Velocity, collisionNormal);
     b->Velocity = glm::reflect(b->Velocity, -collisionNormal);
 
-    //debug: set IsColliding to true
-    a->IsColliding = true;
-    b->IsColliding = true;
+    //finally call collision event
+    //finally call collision event
+    a->OnCollision(a, b);
+    b->OnCollision(b, a);
 }

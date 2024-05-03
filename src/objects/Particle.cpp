@@ -10,9 +10,8 @@ Particle::Particle(glm::vec2 position, float mass, float coefficientOfRestitutio
       Position(position),
       Mass(mass), CoefficientOfResitution(coefficientOfRestitution),
       Velocity(0, 0),
-      TotalForce(0, 0)
-{
-    if(mass == 0.0f)
+      TotalForce(0, 0), Color(ImColor(255, 255, 255)) {
+    if (mass == 0.0f)
         InverseMass = 0.0f;
     else
         InverseMass = 1.0f / mass;

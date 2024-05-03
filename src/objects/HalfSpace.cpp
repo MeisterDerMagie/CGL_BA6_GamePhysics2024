@@ -10,8 +10,7 @@ HalfSpace::HalfSpace(glm::vec2 halfSpaceEndPoint, const std::string& tag)
 }
 
 void HalfSpace::Draw() {
-    Draw::SetColor(Colors::white);
-
+    
     //draw an "infinitly" long line
     glm::vec2 hs = HalfSpaceEndPoint - HalfSpaceOrigin;
     glm::vec2 hsOrigin = hs * -10000.0f;
