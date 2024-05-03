@@ -5,8 +5,7 @@
 
 Circle::Circle(glm::vec2 position, float radius, float mass, float coefficientOfRestitution, const std::string& tag)
     : Particle(position, mass, coefficientOfRestitution, Particle::Circle, tag),
-    Radius(radius),
-    IsColliding(false) {
+    Radius(radius) {
 }
 
 void Circle::Draw() {

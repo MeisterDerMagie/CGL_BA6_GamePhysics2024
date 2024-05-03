@@ -18,14 +18,14 @@ public:
     // Draws additional ImGui windows.
     virtual void DrawGUI() = 0;
 
+    glm::vec2 cameraCenter;
+    float orthographicSize;
+    
 private:
     glm::mat4 projection;
     glm::mat4 view;
     glm::mat4 matrix;
     glm::mat4 identity;
-
-    glm::vec2 cameraCenter;
-    float orthographicSize;
 
     bool isCameraWindowVisible;
     bool isMovingCamera;

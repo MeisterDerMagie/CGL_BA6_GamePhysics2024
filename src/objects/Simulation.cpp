@@ -11,18 +11,20 @@ Simulation::Simulation(glm::vec2 gravity)
 
 Simulation::~Simulation() = default;
 
-void Simulation::AddParticle(std::shared_ptr<Particle> particle) {
-    Particles.push_back(particle);
+void Simulation::SpawnParticle(std::shared_ptr<Particle> particle) {
+    ParticlesToSpawn.push_back(particle);
 }
 
 void Simulation::DestroyParticle(std::shared_ptr<Particle> particle) {
-    Particles.erase(std::remove(Particles.begin(), Particles.end(), particle), Particles.end());
+    ParticlesToDestroy.push_back(particle);
 }
 
 void Simulation::Update(float deltaTime) {
     int index = -1;
     for (auto particle : Particles) {
         index += 1;
+
+        //std::cout << particle->Tag << ": Pos{ " << particle->Position.x << ", " << particle->Position.y << " }" << std::endl;
         
         //simulate physics for all particles
         particle->ResetTotalForce();
@@ -41,6 +43,18 @@ void Simulation::Update(float deltaTime) {
             CollisionResolver::Resolve(particle, otherParticle);
         }
     }
+
+    //destroy particles
+    for (auto particle : ParticlesToDestroy) {
+        Particles.erase(std::remove(Particles.begin(), Particles.end(), particle), Particles.end());
+    }
+    ParticlesToDestroy.clear();
+
+    //spawn particles
+    for (auto particle : ParticlesToSpawn) {
+        Particles.push_back(particle);
+    }
+    ParticlesToSpawn.clear();
 }
 
 void Simulation::Draw() {

@@ -1,9 +1,11 @@
 ﻿#include "CollisionResolver.h"
 #include "HalfSpace.h"
 #include "Circle.h"
+#include "AABB.h"
 
 #include <iostream>
 #include <glm/detail/func_geometric.inl>
+
 
 
 void CollisionResolver::Resolve(const std::shared_ptr<Particle>& a, const std::shared_ptr<Particle>& b) {
@@ -64,7 +66,7 @@ void CollisionResolver::Resolve(const std::shared_ptr<Particle>& a, const std::s
             const std::shared_ptr<Line> b_Line = std::dynamic_pointer_cast<Line>(b);
             Resolve(a_Circle, b_Line);
             return;
-        }
+        }*/
 
         // Circle - AABB
         if (b->Type == Particle::AABB) {
@@ -72,7 +74,6 @@ void CollisionResolver::Resolve(const std::shared_ptr<Particle>& a, const std::s
             Resolve(a_Circle, b_AABB);
             return;
         }
-        */
     }
 
     /*if (a->Type == Particle::Line) {
@@ -105,7 +106,7 @@ void CollisionResolver::Resolve(const std::shared_ptr<Particle>& a, const std::s
             Resolve(a_Line, b_AABB);
             return;
         }
-    }
+    }*/
 
     if (a->Type == Particle::AABB) {
         const std::shared_ptr<AABB> a_AABB = std::dynamic_pointer_cast<AABB>(a);
@@ -132,49 +133,49 @@ void CollisionResolver::Resolve(const std::shared_ptr<Particle>& a, const std::s
         }
 
         // AABB - Line
-        if (b->Type == Particle::Line) {
+        /*if (b->Type == Particle::Line) {
             const std::shared_ptr<Line> b_Line = std::dynamic_pointer_cast<Line>(b);
             Resolve(a_AABB, b_Line);
             return;
-        }
-    }*/
+        }*/
+    }
 
-    std::cerr << "Unsupported collision: " << a->Type << " - " << b->Type;
+    std::cerr << "Unsupported collision: " << a->Type << " - " << b->Type << std::endl;
 }
 
 void CollisionResolver::Resolve(const std::shared_ptr<HalfSpace>& a, const std::shared_ptr<HalfSpace>& b) {
-    //colliding half spaces have no effect on eachother
+    //colliding half spaces have no effect on each other
     return;
 }
 
 
-void CollisionResolver::Resolve(const std::shared_ptr<HalfSpace>& a, const std::shared_ptr<Circle>& b) {
+void CollisionResolver::Resolve(const std::shared_ptr<HalfSpace>& halfSpace, const std::shared_ptr<Circle>& circle) {
     //normalize line
-    glm::vec2 lineNormal = glm::normalize(a->HalfSpaceEndPoint);
+    glm::vec2 lineNormal = glm::normalize(halfSpace->HalfSpaceEndPoint);
 
     //rotate normal of line by 90 degrees to get the normal of the half space
     auto halfSpaceNormal = glm::vec2(lineNormal.y * -1.0f, lineNormal.x);
 
     //calculate projected distance
-    float projectedDistance = glm::dot(halfSpaceNormal, b->Position);
+    float projectedDistance = glm::dot(halfSpaceNormal, circle->Position);
 
     //if projected distance is smaller than the radius, we're colliding with the half space
-    bool isCollidingWithHalfSpace = projectedDistance < b->Radius;
+    bool isCollidingWithHalfSpace = projectedDistance < circle->Radius;
 
     //if we're colliding, move the circle out of the half space
     if (isCollidingWithHalfSpace) {        
-        float intersectionDepth = b->Radius - projectedDistance;
+        float intersectionDepth = circle->Radius - projectedDistance;
         glm::vec2 moveDirectionAndDistance = halfSpaceNormal * intersectionDepth;
-        b->Position += moveDirectionAndDistance;
+        circle->Position += moveDirectionAndDistance;
 
         //then reflect the velocity to create bounce        
         glm::vec2 reflectedVelocity =
-            glm::reflect(b->Velocity, halfSpaceNormal);
-        b->Velocity = reflectedVelocity;
+            glm::reflect(circle->Velocity, halfSpaceNormal);
+        circle->Velocity = reflectedVelocity;
 
         //finally call collision event
-        a->OnCollision(a, b);
-        b->OnCollision(b, a);
+        halfSpace->OnCollision.Invoke(halfSpace, circle);
+        circle->OnCollision.Invoke(circle, halfSpace);
     }
 }
 
@@ -212,7 +213,51 @@ void CollisionResolver::Resolve(const std::shared_ptr<Circle>& a, const std::sha
     b->Velocity = glm::reflect(b->Velocity, -collisionNormal);
 
     //finally call collision event
+    a->OnCollision.Invoke(a, b);
+    b->OnCollision.Invoke(b, a);
+}
+
+void CollisionResolver::Resolve(const std::shared_ptr<AABB>& a, const std::shared_ptr<AABB>& b) {
+    //colliding AABBs have no effect on each other
+    return;
+}
+
+void CollisionResolver::Resolve(const std::shared_ptr<AABB>& a, const std::shared_ptr<HalfSpace>& b) {
+    //colliding AABBs and half spaces have no effect on each other
+    return;
+}
+
+void CollisionResolver::Resolve(const std::shared_ptr<HalfSpace>& a, const std::shared_ptr<AABB>& b) {
+    //colliding AABBs and half spaces have no effect on each other
+    return;
+}
+
+void CollisionResolver::Resolve(const std::shared_ptr<AABB>& aabb, const std::shared_ptr<Circle>& circle) {
+    glm::vec2 closestPointOnAABBToCircle = glm::clamp(circle->Position, aabb->LowerLeft, aabb->UpperRight);
+    
+    float intersectionDepth = -distance(closestPointOnAABBToCircle, circle->Position) + circle->Radius;
+
+    //if no collision is happening, do nothing
+    if(intersectionDepth <= 0.0f)
+        return;
+
+    //otherwise, resolve the collision
+    glm::vec2 collisionNormal;
+    if(aabb->UseCenterForCollisionNormal)
+        collisionNormal = normalize((circle->Position - closestPointOnAABBToCircle));
+    else
+        collisionNormal = normalize((circle->Position - aabb->Position));
+    
+    circle->Position += collisionNormal * intersectionDepth;
+
+    //reflect velocity
+    circle->Velocity = glm::reflect(circle->Velocity, collisionNormal);
+
     //finally call collision event
-    a->OnCollision(a, b);
-    b->OnCollision(b, a);
+    aabb->OnCollision.Invoke(aabb, circle);
+    circle->OnCollision.Invoke(circle, aabb);
+}
+
+void CollisionResolver::Resolve(const std::shared_ptr<Circle>& circle, const std::shared_ptr<AABB>& aabb) {
+    Resolve(aabb, circle);
 }

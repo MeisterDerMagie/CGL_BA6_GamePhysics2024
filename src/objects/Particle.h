@@ -4,11 +4,8 @@
 #include <vector>
 #include <glm/vec2.hpp>
 
-#include "EventsP.hpp"
+#include "Event.hpp"
 #include "core/Colors.h"
-
-using namespace SCHLADETSCH_NAMESPACE;
-using namespace SCHLADETSCH_NAMESPACE::Events;
 
 class Particle {
 public:
@@ -18,7 +15,7 @@ public:
     
     Particle(glm::vec2 position, float mass, float coefficientOfRestitution, ParticleType particleType, std::string tag = "");
 
-    Event<std::shared_ptr<Particle>/*self*/, std::shared_ptr<Particle>/*other*/> OnCollision;
+    Event<void(std::shared_ptr<Particle>/*self*/, std::shared_ptr<Particle>/*other*/)> OnCollision;
     
     std::string Tag;
     ParticleType Type;

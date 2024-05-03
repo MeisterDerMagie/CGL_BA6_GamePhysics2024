@@ -8,7 +8,5 @@ public:
 
     float Radius;
 
-    bool IsColliding;
-
     void Draw() override;
 };

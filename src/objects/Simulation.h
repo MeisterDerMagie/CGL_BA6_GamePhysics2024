@@ -8,7 +8,7 @@ public:
     Simulation(glm::vec2 gravity);
     ~Simulation();
     
-    void AddParticle(std::shared_ptr<Particle> particle);
+    void SpawnParticle(std::shared_ptr<Particle> particle);
     void DestroyParticle(std::shared_ptr<Particle> particle);
 
     void Update(float deltaTime);
@@ -16,6 +16,8 @@ public:
 
     glm::vec2 Gravity;
     std::vector<std::shared_ptr<Particle>> Particles;
+    std::vector<std::shared_ptr<Particle>> ParticlesToSpawn;
+    std::vector<std::shared_ptr<Particle>> ParticlesToDestroy;
 
 private:
 };
