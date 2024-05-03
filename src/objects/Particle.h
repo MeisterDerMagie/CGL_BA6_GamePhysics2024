@@ -1,12 +1,18 @@
 ﻿#pragma once
+#include <memory>
+#include <string>
+#include <vector>
 #include <glm/vec2.hpp>
 
 class Particle {
 public:
-    enum ParticleType {Line, Circle, AABB};
-    
-    Particle(glm::vec2 position, float mass, float coefficientOfRestitution, ParticleType particleType);
+    virtual ~Particle() = default;
 
+    enum ParticleType {Line, HalfSpace, Circle, AABB};
+    
+    Particle(glm::vec2 position, float mass, float coefficientOfRestitution, ParticleType particleType, std::string tag = "");
+
+    std::string Tag;
     ParticleType Type;
     glm::vec2 Position;
     float Mass;
@@ -21,6 +27,6 @@ public:
     virtual void AddForce(glm::vec2 force);
     virtual void AddImpulse(glm::vec2 impulse);
     virtual void ResetTotalForce();
-
+    
     virtual void Draw() = 0;
 };

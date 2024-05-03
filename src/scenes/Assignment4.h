@@ -5,6 +5,7 @@
 
 #include "objects/Circle.h"
 #include "core/Simple2DScene.h"
+#include "objects/Simulation.h"
 
 class Assignment4 : public Simple2DScene {
 public:
@@ -20,6 +21,5 @@ public:
     virtual const char* GetName() override { return "Assignment4"; }
 
 private:
-    glm::vec2 gravity;
-    std::vector<std::shared_ptr<Particle>> particles;
+    Simulation simulation;
 };
