@@ -9,17 +9,18 @@
 Assignment6::Assignment6()
     : simulation(Simulation(glm::vec2(0, -9.81f))),
       playableAreaWidth(14),
-      paddleWidth(2) {
+      paddleWidth(2),
+      respawnCooldown(0) {
 }
 
 void Assignment6::SpawnNewBall() {
-    Circle circle = Circle(glm::vec2(0, 4), 0.5f, 1, 0.5f, "Ball");
+    Circle circle = Circle(glm::vec2(0, 4), 0.5f, 0, 0.5f, "Ball");
     Ball = std::make_shared<Circle>(circle);
     simulation.SpawnParticle(Ball);
 
-    //initial velocity
-    Ball->Velocity = glm::vec2(0, -14.0f);
-
+    //set respawn cooldown
+    respawnCooldown = 1.0f;
+    
     //accelerate ball on each paddle hit
     auto OnPaddleHit = [this](const std::shared_ptr<Particle>& ball, const std::shared_ptr<Particle>& other) 
     {
@@ -36,6 +37,12 @@ void Assignment6::DestroyBall() {
 
 void Assignment6::OnEnable() {
 
+    //create simulation
+    simulation = Simulation(glm::vec2(0, -9.81f));
+
+    //reset state
+    gameIsOver = false;    
+    
     //create ball
     SpawnNewBall();
     
@@ -69,15 +76,17 @@ void Assignment6::OnEnable() {
     simulation.SpawnParticle(deathZonePointer);
 
     //create bricks
-    int brickRows = 4;
-    int bricksPerRow = 10;
-    float bricksDistance = 0.25f;
-    float bricksHeight = 0.5f;
-    float lowestBricksPosition = 6.9f;
+    const int brickRows = 4;
+    const int bricksPerRow = 10;
+    const float bricksDistance = 0.25f;
+    const float bricksHeight = 0.5f;
+    const float lowestBricksPosition = 6.9f;
+
     float topWallYPos = 0.0f;
     aliveBricksCount = brickRows * bricksPerRow;
+
     for (int i = 0; i < brickRows; ++i) {
-        float brickWidth = (playableAreaWidth - (static_cast<float>(bricksPerRow) + 1.0f) * bricksDistance) / static_cast<float>(bricksPerRow);
+        const float brickWidth = (playableAreaWidth - (static_cast<float>(bricksPerRow) + 1.0f) * bricksDistance) / static_cast<float>(bricksPerRow);
         for (int j = 0; j < bricksPerRow; ++j) {
             //create brick
             std::string brickTag = "Brick_" + (i + j);
@@ -119,11 +128,25 @@ void Assignment6::OnEnable() {
     orthographicSize = 13.0f;
 }
 
-void Assignment6::OnDisable() {}
+void Assignment6::OnDisable() {
+
+    //How to properly delete the simulation?
+    //simulation.~Simulation();
+}
 
 void Assignment6::Update(float deltaTime) {
     // get mouse position
     glm::vec2 mousePosition = Input::GetMousePos();
+
+    // make ball non-static when respawn cooldown ran off
+    bool isOnCooldown = respawnCooldown > 0.0f;
+    respawnCooldown -= deltaTime;
+    if(isOnCooldown && respawnCooldown <= 0.0f) {
+        Ball->SetMass(1.0f);
+        
+        //initial velocity
+        Ball->Velocity = glm::vec2(0, -14.0f);
+    }
 
     //set paddle position
     float clampedXPos = glm::clamp(mousePosition.x, -playableAreaWidth / 2.0f + paddleWidth / 2.0f, playableAreaWidth / 2.0f - paddleWidth / 2.0f);

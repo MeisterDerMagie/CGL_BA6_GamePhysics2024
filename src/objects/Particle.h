@@ -32,6 +32,7 @@ public:
     virtual void AddForce(glm::vec2 force);
     virtual void AddImpulse(glm::vec2 impulse);
     virtual void ResetTotalForce();
+    virtual void SetMass(float newMass);
     ImColor Color;
     
     virtual void Draw() = 0;

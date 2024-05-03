@@ -4,6 +4,13 @@ void Particle::ResetTotalForce() {
     TotalForce = glm::vec2(0, 0);
 }
 
+void Particle::SetMass(float newMass) {
+    if (newMass == 0.0f)
+        InverseMass = 0.0f;
+    else
+        InverseMass = 1.0f / newMass;
+}
+
 Particle::Particle(glm::vec2 position, float mass, float coefficientOfRestitution, ParticleType particleType, std::string tag)
     : Tag(std::move(tag)),
       Type(particleType),
@@ -11,10 +18,7 @@ Particle::Particle(glm::vec2 position, float mass, float coefficientOfRestitutio
       Mass(mass), CoefficientOfResitution(coefficientOfRestitution),
       Velocity(0, 0),
       TotalForce(0, 0), Color(ImColor(255, 255, 255)) {
-    if (mass == 0.0f)
-        InverseMass = 0.0f;
-    else
-        InverseMass = 1.0f / mass;
+    Particle::SetMass(mass);
 }
 
 void Particle::SemiImpliciteEulerIntegration(float deltaTime) {

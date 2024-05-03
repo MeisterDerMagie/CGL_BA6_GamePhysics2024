@@ -30,4 +30,5 @@ private:
     float paddleWidth;
     int aliveBricksCount = -1;
     bool gameIsOver = false;
+    float respawnCooldown;
 };
