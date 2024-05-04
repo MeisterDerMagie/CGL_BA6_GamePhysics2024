@@ -3,12 +3,6 @@
 #include "core/Colors.h"
 #include "core/Draw.h"
 
-HalfSpace::HalfSpace(glm::vec2 halfSpaceEndPoint, const std::string& tag)
-    : Particle(glm::vec2(0, 0), 0, 0.5f, Particle::HalfSpace, tag),
-      HalfSpaceEndPoint(halfSpaceEndPoint),
-      HalfSpaceOrigin(0, 0) {
-}
-
 void HalfSpace::Draw() {
     
     //draw an "infinitly" long line

@@ -11,14 +11,15 @@ void Particle::SetMass(float newMass) {
         InverseMass = 1.0f / newMass;
 }
 
-Particle::Particle(glm::vec2 position, float mass, float coefficientOfRestitution, ParticleType particleType, std::string tag)
+Particle::Particle(glm::vec2 position, float mass, const Material& materialRef, ParticleType particleType, std::string tag)
     : Tag(std::move(tag)),
       Type(particleType),
       Position(position),
-      Mass(mass), CoefficientOfResitution(coefficientOfRestitution),
+      Mass(mass),
       Velocity(0, 0),
       TotalForce(0, 0), Color(ImColor(255, 255, 255)) {
     Particle::SetMass(mass);
+    material = std::make_shared<Material>(materialRef);
 }
 
 void Particle::SemiImpliciteEulerIntegration(float deltaTime) {

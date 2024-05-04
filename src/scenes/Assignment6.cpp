@@ -14,7 +14,8 @@ Assignment6::Assignment6()
 }
 
 void Assignment6::SpawnNewBall() {
-    Circle circle = Circle(glm::vec2(0, 4), 0.5f, 0, 0.5f, "Ball");
+    Material ballMaterial = Material(0, 0);
+    Circle circle = Circle(glm::vec2(0, 4), 0.5f, 0, ballMaterial, "Ball");
     Ball = std::make_shared<Circle>(circle);
     simulation.SpawnParticle(Ball);
 
@@ -45,24 +46,26 @@ void Assignment6::OnEnable() {
     
     //create ball
     SpawnNewBall();
+
+    Material sharedMaterial = Material(0,0);
     
     //create paddle
-    AABB paddle = AABB(glm::vec2(-paddleWidth / 2.0f, 0), glm::vec2(paddleWidth / 2.0f, 0.4f), false, true, "Paddle");
+    AABB paddle = AABB(glm::vec2(-paddleWidth / 2.0f, 0), glm::vec2(paddleWidth / 2.0f, 0.4f), sharedMaterial, false, true, "Paddle");
     Paddle = std::make_shared<AABB>(paddle);
     simulation.SpawnParticle(Paddle);
 
     //create left wall
-    AABB leftWall = AABB(glm::vec2(-100.0f, -100.0), glm::vec2(-playableAreaWidth / 2.0f, 100.0f), false, true, "LeftWall");
+    AABB leftWall = AABB(glm::vec2(-100.0f, -100.0), glm::vec2(-playableAreaWidth / 2.0f, 100.0f), sharedMaterial, false, true, "LeftWall");
     std::shared_ptr<AABB> leftWallPointer = std::make_shared<AABB>(leftWall);
     simulation.SpawnParticle(leftWallPointer);
 
     //create right wall
-    AABB rightWall = AABB(glm::vec2(playableAreaWidth / 2.0f, -100.0), glm::vec2(100.0f, 100.0f), false, true, "RightWall");
+    AABB rightWall = AABB(glm::vec2(playableAreaWidth / 2.0f, -100.0), glm::vec2(100.0f, 100.0f), sharedMaterial, false, true, "RightWall");
     std::shared_ptr<AABB> rightWallPointer = std::make_shared<AABB>(rightWall);
     simulation.SpawnParticle(rightWallPointer);
 
     //create death zone
-    AABB deathZone = AABB(glm::vec2(-playableAreaWidth / 2.0f, -100.0), glm::vec2(playableAreaWidth / 2.0f, -2.0f), false, true, "DeathZone");
+    AABB deathZone = AABB(glm::vec2(-playableAreaWidth / 2.0f, -100.0), glm::vec2(playableAreaWidth / 2.0f, -2.0f), sharedMaterial, false, true, "DeathZone");
     std::shared_ptr<AABB> deathZonePointer = std::make_shared<AABB>(deathZone);
     auto OnDeathZoneCollision = [this](const std::shared_ptr<Particle>& deathZone, const std::shared_ptr<Particle>& other) 
     {
@@ -93,7 +96,7 @@ void Assignment6::OnEnable() {
             auto lowerLeft = glm::vec2(-playableAreaWidth / 2.0f + (static_cast<float>((j+1)) * bricksDistance + static_cast<float>(j) * brickWidth), lowestBricksPosition + static_cast<float>(i) * bricksHeight + static_cast<float>(i) * bricksDistance);
             auto upperRight = glm::vec2(lowerLeft.x + brickWidth, lowerLeft.y + bricksHeight);
             topWallYPos = upperRight.y + bricksDistance;
-            AABB brick = AABB(lowerLeft, upperRight, false, false, brickTag);
+            AABB brick = AABB(lowerLeft, upperRight, sharedMaterial, false, false, brickTag);
             std::shared_ptr<AABB> brickPointer = std::make_shared<AABB>(brick);
             auto OnBrickCollision = [this](const std::shared_ptr<Particle>& brick, const std::shared_ptr<Particle>& other) 
             {
@@ -119,7 +122,7 @@ void Assignment6::OnEnable() {
     }
 
     //create top wall
-    AABB topWall = AABB(glm::vec2(-playableAreaWidth / 2.0f, topWallYPos), glm::vec2(playableAreaWidth / 2.0f, 100.0f), false, false, "TopWall");
+    AABB topWall = AABB(glm::vec2(-playableAreaWidth / 2.0f, topWallYPos), glm::vec2(playableAreaWidth / 2.0f, 100.0f), sharedMaterial, false, false, "TopWall");
     std::shared_ptr<AABB> topWallPointer = std::make_shared<AABB>(topWall);
     simulation.SpawnParticle(topWallPointer);
 

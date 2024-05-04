@@ -5,6 +5,7 @@
 #include <glm/vec2.hpp>
 
 #include "Event.hpp"
+#include "Material.h"
 #include "core/Colors.h"
 
 class Particle {
@@ -13,7 +14,7 @@ public:
 
     enum ParticleType {Line, HalfSpace, Circle, AABB};
     
-    Particle(glm::vec2 position, float mass, float coefficientOfRestitution, ParticleType particleType, std::string tag = "");
+    Particle(glm::vec2 position, float mass, const Material& materialRef, ParticleType particleType, std::string tag = "");
 
     Event<void(std::shared_ptr<Particle>/*self*/, std::shared_ptr<Particle>/*other*/)> OnCollision;
     
@@ -22,7 +23,7 @@ public:
     glm::vec2 Position;
     float Mass;
     float InverseMass;
-    float CoefficientOfResitution; //bounciness / elasticity
+    std::shared_ptr<Material> material;
 
     glm::vec2 Velocity;
     glm::vec2 TotalForce;

@@ -13,8 +13,10 @@ Assignment5::Assignment5()
 
 void Assignment5::OnEnable() {
 
+    Material sharedMaterial = Material(0, 0);
+    
     //add circle
-    Circle circle = Circle(glm::vec2(1, 4), 1, 1, 0.5f, "Circle");
+    Circle circle = Circle(glm::vec2(1, 4), 1, 1, sharedMaterial, "Circle");
     std::shared_ptr<Circle> circlePointer = std::make_shared<Circle>(circle);
     simulation.SpawnParticle(circlePointer);
 
@@ -23,13 +25,13 @@ void Assignment5::OnEnable() {
     { 
         simulation.DestroyParticle(self); 
     };
-    AABB aabb = AABB(glm::vec2(-0.5f, 0), glm::vec2(0.5f, 1.5f), true, false, "AABB");
+    AABB aabb = AABB(glm::vec2(-0.5f, 0), glm::vec2(0.5f, 1.5f), sharedMaterial, true, false, "AABB");
     std::shared_ptr<AABB> aabbPointer = std::make_shared<AABB>(aabb);
     aabbPointer->OnCollision.Subscribe("DestroyAABB", DestroyAABB);
     simulation.SpawnParticle(aabbPointer);
 
     //add half space (floor)
-    auto halfSpace = HalfSpace(glm::vec2(1, 0.3f), "Half Space");
+    auto halfSpace = HalfSpace(glm::vec2(1, 0.3f), sharedMaterial, "Half Space");
     std::shared_ptr<HalfSpace> halfSpacePointer = std::make_shared<HalfSpace>(halfSpace);
     simulation.SpawnParticle(halfSpacePointer);
 }

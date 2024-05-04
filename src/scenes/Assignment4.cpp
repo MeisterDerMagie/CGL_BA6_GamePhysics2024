@@ -25,28 +25,30 @@ void HandleCollision(std::shared_ptr<Particle> self, std::shared_ptr<Particle> o
 
 
 void Assignment4::OnEnable() {
+
+    Material sharedMaterial = Material(0, 0);
     
-    Circle circle1 = Circle(glm::vec2(1, 2), 1, 1, 0.5f, "Circle 1");
+    Circle circle1 = Circle(glm::vec2(1, 2), 1, 1, sharedMaterial, "Circle 1");
     std::shared_ptr<Circle> circle1Pointer = std::make_shared<Circle>(circle1);
     circle1Pointer->OnCollision.Subscribe("Circle1Collision", HandleCollision);
     simulation.SpawnParticle(circle1Pointer);
     
-    auto circle2 = Circle(glm::vec2(1.5f, 8.0f), 2, 2, 0.5f, "Circle 2");
+    auto circle2 = Circle(glm::vec2(1.5f, 8.0f), 2, 2, sharedMaterial, "Circle 2");
     std::shared_ptr<Circle> circle2Pointer = std::make_shared<Circle>(circle2);
     circle2Pointer->OnCollision.Subscribe("Circle2Collision", HandleCollision);
     simulation.SpawnParticle(circle2Pointer);
 
-    auto circle3 = Circle(glm::vec2(10.0f, 10.0f), 4, 10, 0.5f, "Circle 3");
+    auto circle3 = Circle(glm::vec2(10.0f, 10.0f), 4, 10, sharedMaterial, "Circle 3");
     std::shared_ptr<Circle> circle3Pointer = std::make_shared<Circle>(circle3);
     circle3Pointer->OnCollision.Subscribe("Circle3Collision", HandleCollision);
     simulation.SpawnParticle(circle3Pointer);
 
-    auto circle4 = Circle(glm::vec2(-4.0f, 2.0f), 1, 0, 0.5f, "Circle 4 (static)");
+    auto circle4 = Circle(glm::vec2(-4.0f, 2.0f), 1, 0, sharedMaterial, "Circle 4 (static)");
     std::shared_ptr<Circle> circle4Pointer = std::make_shared<Circle>(circle4);
     circle4Pointer->OnCollision.Subscribe("Circle4Collision", HandleCollision);
     simulation.SpawnParticle(circle4Pointer);
     
-    auto halfSpace = HalfSpace(glm::vec2(1, 0.05f), "Half Space");
+    auto halfSpace = HalfSpace(glm::vec2(1, 0.05f), sharedMaterial, "Half Space");
     std::shared_ptr<HalfSpace> halfSpacePointer = std::make_shared<HalfSpace>(halfSpace);
     halfSpacePointer->OnCollision.Subscribe("HalfSpaceCollision", HandleCollision);
     simulation.SpawnParticle(halfSpacePointer);
