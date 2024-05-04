@@ -5,10 +5,11 @@
 #include "imgui.h"
 #include "objects/AABB.h"
 #include "objects/Circle.h"
+#include "objects/CollisionResolver_Elastic.h"
 #include "objects/HalfSpace.h"
 
 Assignment5::Assignment5()
-    : simulation(Simulation(glm::vec2(0, -9.81f))) {
+    : simulation(Simulation(glm::vec2(0, -9.81f), new CollisionResolver_Elastic())) {
 }
 
 void Assignment5::OnEnable() {
@@ -36,7 +37,9 @@ void Assignment5::OnEnable() {
     simulation.SpawnParticle(halfSpacePointer);
 }
 
-void Assignment5::OnDisable() {}
+void Assignment5::OnDisable() {
+    simulation.DestroyAllParticles();
+}
 
 void Assignment5::Update(float deltaTime) {
     simulation.Update(deltaTime);

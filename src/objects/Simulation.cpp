@@ -2,11 +2,12 @@
 
 #include <iostream>
 
-#include "CollisionResolver.h"
+#include "CollisionResolver_Elastic.h"
 #include "core/Draw.h"
 
-Simulation::Simulation(glm::vec2 gravity)
-    : Gravity(gravity) {
+Simulation::Simulation(glm::vec2 gravity, ICollisionResolver* collisionResolver)
+    : Gravity(gravity),
+      collision_resolver(collisionResolver) {
 }
 
 Simulation::~Simulation() = default;
@@ -19,6 +20,15 @@ void Simulation::DestroyParticle(std::shared_ptr<Particle> particle) {
     ParticlesToDestroy.push_back(particle);
 }
 
+void Simulation::DestroyAllParticles() {
+    for (auto particle : Particles) {
+        ParticlesToDestroy.push_back(particle);
+    }
+    for (auto particle : ParticlesToDestroy) {
+        Particles.erase(std::remove(Particles.begin(), Particles.end(), particle), Particles.end());
+    }
+}
+
 void Simulation::Update(float deltaTime) {
     int index = -1;
     for (auto particle : Particles) {
@@ -29,6 +39,7 @@ void Simulation::Update(float deltaTime) {
         //simulate physics for all particles
         particle->ResetTotalForce();
         particle->AddGravity(Gravity);
+        particle->Velocity = particle->Velocity * (1.0f - particle->material->DampingFactor * deltaTime); //linear drag
         particle->SemiImpliciteEulerIntegration(deltaTime);
 
         //resolve collisions with other particles
@@ -40,7 +51,7 @@ void Simulation::Update(float deltaTime) {
             if(otherIndex <= index)
                 continue;
             
-            CollisionResolver::Resolve(particle, otherParticle);
+            collision_resolver->Resolve(particle, otherParticle);
         }
     }
 

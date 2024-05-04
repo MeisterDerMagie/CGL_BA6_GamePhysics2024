@@ -4,10 +4,11 @@
 #include "core/Draw.h"
 #include "objects/AABB.h"
 #include "objects/Circle.h"
+#include "objects/CollisionResolver_Elastic.h"
 #include "objects/Simulation.h"
 
 Assignment6::Assignment6()
-    : simulation(Simulation(glm::vec2(0, -9.81f))),
+    : simulation(Simulation(glm::vec2(0, -9.81f), new CollisionResolver_Elastic())),
       playableAreaWidth(14),
       paddleWidth(2),
       respawnCooldown(0) {
@@ -39,7 +40,7 @@ void Assignment6::DestroyBall() {
 void Assignment6::OnEnable() {
 
     //create simulation
-    simulation = Simulation(glm::vec2(0, -9.81f));
+    simulation = Simulation(glm::vec2(0, -9.81f), new CollisionResolver_Elastic());
 
     //reset state
     gameIsOver = false;    
@@ -92,7 +93,7 @@ void Assignment6::OnEnable() {
         const float brickWidth = (playableAreaWidth - (static_cast<float>(bricksPerRow) + 1.0f) * bricksDistance) / static_cast<float>(bricksPerRow);
         for (int j = 0; j < bricksPerRow; ++j) {
             //create brick
-            std::string brickTag = "Brick_" + (i + j);
+            std::string brickTag = "Brick_" + std::to_string((j + i*bricksPerRow));
             auto lowerLeft = glm::vec2(-playableAreaWidth / 2.0f + (static_cast<float>((j+1)) * bricksDistance + static_cast<float>(j) * brickWidth), lowestBricksPosition + static_cast<float>(i) * bricksHeight + static_cast<float>(i) * bricksDistance);
             auto upperRight = glm::vec2(lowerLeft.x + brickWidth, lowerLeft.y + bricksHeight);
             topWallYPos = upperRight.y + bricksDistance;
@@ -135,6 +136,8 @@ void Assignment6::OnDisable() {
 
     //How to properly delete the simulation?
     //simulation.~Simulation();
+    
+    simulation.DestroyAllParticles();
 }
 
 void Assignment6::Update(float deltaTime) {

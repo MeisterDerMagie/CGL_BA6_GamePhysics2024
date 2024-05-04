@@ -7,11 +7,11 @@
 #include "core/Draw.h"
 #include <memory>
 
-#include "objects/CollisionResolver.h"
+#include "objects/CollisionResolver_Elastic.h"
 #include "objects/Simulation.h"
 
 Assignment4::Assignment4()
-    : simulation(Simulation(glm::vec2(0, -9.81f))) {
+    : simulation(Simulation(glm::vec2(0, -9.81f), new CollisionResolver_Elastic())) {
 }
 
 Assignment4::~Assignment4() = default;
@@ -52,9 +52,15 @@ void Assignment4::OnEnable() {
     std::shared_ptr<HalfSpace> halfSpacePointer = std::make_shared<HalfSpace>(halfSpace);
     halfSpacePointer->OnCollision.Subscribe("HalfSpaceCollision", HandleCollision);
     simulation.SpawnParticle(halfSpacePointer);
+
+    //set initial camera view
+    cameraCenter = glm::vec2(0, 6.0f);
+    orthographicSize = 16.0f;
 }
 
-void Assignment4::OnDisable() {}
+void Assignment4::OnDisable() {
+    simulation.DestroyAllParticles();
+}
 
 void Assignment4::Update(float deltaTime) {
     simulation.Update(deltaTime);
