@@ -30,9 +30,8 @@ void Assignment8::OnEnable() {
 
         auto OnHoleTrigger = [this, ballMass, ballMaterial](const std::shared_ptr<Particle>& hole, const std::shared_ptr<Particle>& other) 
         {
-            if(other->Tag == "Wall")
-                return;
-            simulation.DestroyParticle(other);
+            if(other->Tag == "ObjectBall" || other->Tag == "CueBall")
+                simulation.DestroyParticle(other);
 
             if(other->Tag == "CueBall")
                 SpawnCueBall(ballMass, ballMaterial);
@@ -110,7 +109,7 @@ void Assignment8::OnEnable() {
     for (int row = 0; row < 5; ++row) {
         for (int ball = 0; ball < row + 1; ++ball) {
 
-            auto objectBall = PoolObjectBall(colors[index], ballNumbers[index], glm::vec2(-0.87f * static_cast<float>(row), 0.5f * static_cast<float>(row) - static_cast<float>(ball)) + positionOffset, 0.5f, ballMass, ballMaterial, "ObjectBall_" + std::to_string(ballNumbers[index]));
+            auto objectBall = PoolObjectBall(colors[index], ballNumbers[index], glm::vec2(-0.87f * static_cast<float>(row), 0.5f * static_cast<float>(row) - static_cast<float>(ball)) + positionOffset, 0.5f, ballMass, ballMaterial, "ObjectBall");
             auto objectBallPtr = std::make_shared<PoolObjectBall>(objectBall);
             simulation.SpawnParticle(objectBallPtr);
             index++;
