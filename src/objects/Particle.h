@@ -14,7 +14,7 @@ public:
 
     enum ParticleType {Line, HalfSpace, Circle, AABB};
     
-    Particle(glm::vec2 position, float mass, const Material& materialRef, ParticleType particleType, std::string tag = "");
+    Particle(glm::vec2 position, float mass, const Material& materialRef, ParticleType particleType, std::string tag = "", bool isTrigger = false);
 
     Event<void(std::shared_ptr<Particle>/*self*/, std::shared_ptr<Particle>/*other*/)> OnCollision;
     
@@ -24,6 +24,7 @@ public:
     float Mass;
     float InverseMass;
     std::shared_ptr<Material> material;
+    bool IsTrigger;
 
     glm::vec2 Velocity;
     glm::vec2 TotalForce;
@@ -35,6 +36,7 @@ public:
     virtual void ResetTotalForce();
     virtual void SetMass(float newMass);
     ImColor Color;
+    bool DrawFilled = false;
     
     virtual void Draw() = 0;
 

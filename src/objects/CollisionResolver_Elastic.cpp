@@ -6,7 +6,6 @@
 #include <iostream>
 #include <glm/detail/func_geometric.inl>
 
-
 void CollisionResolver_Elastic::Resolve_HalfSpace_Circle(const std::shared_ptr<HalfSpace>& halfSpace, const std::shared_ptr<Circle>& circle) {
     //normalize line
     glm::vec2 lineNormal = glm::normalize(halfSpace->HalfSpaceEndPoint);
@@ -27,8 +26,7 @@ void CollisionResolver_Elastic::Resolve_HalfSpace_Circle(const std::shared_ptr<H
         circle->Position += moveDirectionAndDistance;
 
         //then reflect the velocity to create bounce        
-        glm::vec2 reflectedVelocity =
-            glm::reflect(circle->Velocity, halfSpaceNormal);
+        glm::vec2 reflectedVelocity = glm::reflect(circle->Velocity, halfSpaceNormal);
         circle->Velocity = reflectedVelocity;
 
         //finally call collision event
@@ -38,7 +36,7 @@ void CollisionResolver_Elastic::Resolve_HalfSpace_Circle(const std::shared_ptr<H
 }
 
 void CollisionResolver_Elastic::Resolve_Circle_Circle(const std::shared_ptr<Circle>& a, const std::shared_ptr<Circle>& b) {
-    //if distance between circles
+    //distance between circles
     const float distanceBetweenCircles = glm::distance(a->Position, b->Position);
 
     //collision normal

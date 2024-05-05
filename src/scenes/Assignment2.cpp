@@ -43,9 +43,7 @@ void Assignment2::Update(float deltaTime) {
     // 0: left click, 1: right click
     //drawArrow = leftMouseButtonDown;
 
-    bool clickBeganOverCircle =
-        leftMouseButtonClick && Assignment2::MouseIsOverCircle(
-            mousePosition, circlePosition, circleRadius);
+    bool clickBeganOverCircle = leftMouseButtonClick && MouseIsOverCircle(mousePosition, circlePosition, circleRadius);
 
     if (clickBeganOverCircle) {
         drawArrow = true;

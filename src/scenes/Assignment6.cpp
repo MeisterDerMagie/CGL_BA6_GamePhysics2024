@@ -16,8 +16,10 @@ Assignment6::Assignment6()
 
 void Assignment6::SpawnNewBall() {
     Material ballMaterial = Material(0, 0);
-    Circle circle = Circle(glm::vec2(0, 4), 0.5f, 0, ballMaterial, "Ball");
-    Ball = std::make_shared<Circle>(circle);
+    Circle ball = Circle(glm::vec2(0, 4), 0.5f, 0, ballMaterial, "Ball");
+    ball.DrawFilled = true;
+    ball.Color = ImColor(0.8f, 0.8f, 0.8f, 1.0f);
+    Ball = std::make_shared<Circle>(ball);
     simulation.SpawnParticle(Ball);
 
     //set respawn cooldown
@@ -52,6 +54,8 @@ void Assignment6::OnEnable() {
     
     //create paddle
     AABB paddle = AABB(glm::vec2(-paddleWidth / 2.0f, 0), glm::vec2(paddleWidth / 2.0f, 0.4f), sharedMaterial, false, true, "Paddle");
+    paddle.DrawFilled = true;
+    paddle.Color = ImColor(0.8f, 0.8f, 0.8f, 1.0f);
     Paddle = std::make_shared<AABB>(paddle);
     simulation.SpawnParticle(Paddle);
 
@@ -98,6 +102,7 @@ void Assignment6::OnEnable() {
             auto upperRight = glm::vec2(lowerLeft.x + brickWidth, lowerLeft.y + bricksHeight);
             topWallYPos = upperRight.y + bricksDistance;
             AABB brick = AABB(lowerLeft, upperRight, sharedMaterial, false, false, brickTag);
+            brick.DrawFilled = true;
             std::shared_ptr<AABB> brickPointer = std::make_shared<AABB>(brick);
             auto OnBrickCollision = [this](const std::shared_ptr<Particle>& brick, const std::shared_ptr<Particle>& other) 
             {
@@ -171,5 +176,10 @@ void Assignment6::Draw() {
 
 void Assignment6::DrawGUI() {
     ImGui::Begin("Inspector");
+    bool restart = ImGui::SmallButton("Restart");
+    if(restart) {
+        OnDisable();
+        OnEnable();
+    }
     ImGui::End();
 }

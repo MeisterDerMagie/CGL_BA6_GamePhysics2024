@@ -9,6 +9,5 @@ Circle::Circle(glm::vec2 position, float radius, float mass, const Material& mat
 }
 
 void Circle::Draw() {
-    //Draw::SetColor(Color);
-    Draw::Circle(Position, Radius);
+    Draw::Circle(Position, Radius, DrawFilled);
 }

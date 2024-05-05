@@ -70,7 +70,7 @@ void Assignment7::OnEnable() {
     AABB aabb = AABB(glm::vec2(14, 7), glm::vec2(16, 8), Material(0,0), true, false, "AABB");
     std::shared_ptr<AABB> aabbPointer = std::make_shared<AABB>(aabb);
     simulation.SpawnParticle(aabbPointer);
-    
+
     
     //initial velocity
     circle1Ptr->Velocity = glm::vec2(0, 5);
@@ -101,5 +101,10 @@ void Assignment7::Draw() {
 
 void Assignment7::DrawGUI() {
     ImGui::Begin("Inspector");
+    bool restart = ImGui::SmallButton("Restart");
+    if(restart) {
+        OnDisable();
+        OnEnable();
+    }
     ImGui::End();
 }

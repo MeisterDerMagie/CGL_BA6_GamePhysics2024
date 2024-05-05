@@ -11,7 +11,7 @@ void AABB::SetPosition(glm::vec2 newPosition) {
 
 void AABB::Draw() {
     //draw box
-    Draw::AABB(LowerLeft, UpperRight);
+    Draw::AABB(LowerLeft, UpperRight, DrawFilled);
 
     //draw diagonal
     if(DrawDiagonal)

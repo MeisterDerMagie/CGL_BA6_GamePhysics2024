@@ -72,5 +72,10 @@ void Assignment4::Draw() {
 
 void Assignment4::DrawGUI() {
     ImGui::Begin("Inspector");
+    bool restart = ImGui::SmallButton("Restart");
+    if(restart) {
+        OnDisable();
+        OnEnable();
+    }
     ImGui::End();
 }

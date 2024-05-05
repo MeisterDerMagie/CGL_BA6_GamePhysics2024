@@ -51,5 +51,10 @@ void Assignment5::Draw() {
 
 void Assignment5::DrawGUI() {
     ImGui::Begin("Inspector");
+    bool restart = ImGui::SmallButton("Restart");
+    if(restart) {
+        OnDisable();
+        OnEnable();
+    }
     ImGui::End();
 }

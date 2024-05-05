@@ -3,6 +3,7 @@
 #include <glm/geometric.hpp>
 
 void CollisionResolver_Inelastic::Resolve_HalfSpace_Circle(const std::shared_ptr<HalfSpace>& halfSpace, const std::shared_ptr<Circle>& circle) {
+    
     //normalize line
     glm::vec2 lineNormal = glm::normalize(halfSpace->HalfSpaceEndPoint);
 
@@ -17,6 +18,14 @@ void CollisionResolver_Inelastic::Resolve_HalfSpace_Circle(const std::shared_ptr
 
     //if we're colliding, move the circle out of the half space
     if (isCollidingWithHalfSpace) {        
+
+        //if one particle is trigger, only call OnCollision and do nothing more
+        if(halfSpace->IsTrigger || circle->IsTrigger) {
+            halfSpace->OnCollision.Invoke(halfSpace, circle);
+            circle->OnCollision.Invoke(circle, halfSpace);
+            return;
+        }
+        
         float intersectionDepth = circle->Radius - projectedDistance;
         glm::vec2 moveDirectionAndDistance = halfSpaceNormal * intersectionDepth;
         circle->Position += moveDirectionAndDistance;
@@ -33,7 +42,8 @@ void CollisionResolver_Inelastic::Resolve_HalfSpace_Circle(const std::shared_ptr
 }
 
 void CollisionResolver_Inelastic::Resolve_Circle_Circle(const std::shared_ptr<Circle>& a, const std::shared_ptr<Circle>& b) {
-    //if distance between circles
+        
+    //distance between circles
     const float distanceBetweenCircles = glm::distance(a->Position, b->Position);
 
     //collision normal
@@ -46,6 +56,13 @@ void CollisionResolver_Inelastic::Resolve_Circle_Circle(const std::shared_ptr<Ci
     //if no collision is happening, do nothing
     if (intersectionDepth <= 0.0f)
         return;
+
+    //if one particle is trigger, only call OnCollision and do nothing more
+    if(a->IsTrigger || b->IsTrigger) {
+        a->OnCollision.Invoke(a, b);
+        b->OnCollision.Invoke(b, a);
+        return;
+    }
 
     //otherwise, resolve the collision
     //calculate how far each circle needs to be moved. depends on the mass
@@ -71,6 +88,7 @@ void CollisionResolver_Inelastic::Resolve_Circle_Circle(const std::shared_ptr<Ci
 }
 
 void CollisionResolver_Inelastic::Resolve_AABB_Circle(const std::shared_ptr<AABB>& aabb, const std::shared_ptr<Circle>& circle) {
+    
     glm::vec2 closestPointOnAABBToCircle = glm::clamp(circle->Position, aabb->LowerLeft, aabb->UpperRight);
     
     float intersectionDepth = -distance(closestPointOnAABBToCircle, circle->Position) + circle->Radius;
@@ -79,6 +97,13 @@ void CollisionResolver_Inelastic::Resolve_AABB_Circle(const std::shared_ptr<AABB
     if(intersectionDepth <= 0.0f)
         return;
 
+    //if one particle is trigger, only call OnCollision and do nothing more
+    if(aabb->IsTrigger || circle->IsTrigger) {
+        aabb->OnCollision.Invoke(aabb, circle);
+        circle->OnCollision.Invoke(circle, aabb);
+        return;
+    }
+    
     //otherwise, resolve the collision
     glm::vec2 collisionNormal;
     if(aabb->UseCenterForCollisionNormal)
