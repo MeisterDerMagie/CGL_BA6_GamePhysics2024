@@ -8,10 +8,12 @@
 #include "scenes/Assignment6.h"
 #include "scenes/Assignment7.h"
 #include "scenes/Assignment8.h"
+#include "scenes/FinalAssignment.h"
 
 int main(int argc, char** argv) {
     // Add newly created scenes here so that they show up in the menu.
     std::vector<Scene*> scenes = {
+        new FinalAssignment,
         new Assignment8,
         new Assignment7,
         new Assignment6,
